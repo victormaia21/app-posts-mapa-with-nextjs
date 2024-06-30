@@ -1,95 +1,55 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import { useQuery } from 'react-query';
+import PostServices from '@/services/PostServices';
+import { useState } from 'react';
+import { Grid, Button, Pagination, Stack } from '@mui/material';
+import Post from '@/components/Post';
+import { Posts } from '@/util/Interfaces';
 
-export default function Home() {
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
+export default function RecipeReviewCard() {
+  const [pg, setPg] = useState<number>(1);
+  const [perPg, setPerPg] = useState<number>(20);
+
+  const { getPosts } = PostServices();
+
+  const { data, isLoading, isError } = useQuery(['posts', pg, perPg], () => getPosts(pg, perPg));
+
+  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPg(value);
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <section>
+      <Grid container rowSpacing={4} columnSpacing={{ xs: 1, sm: 1, md: 2 }} padding="0 .5em">
+        {data && data.posts.length > 0 && data.posts.map((e, i) => (
+          <Post id={e.id} title={e.title} body={e.body} userId={e.userId} key={i} />
+        ))}
+      </Grid>
+      <div>
+      {data && (
+        <Stack spacing={2} display="flex" alignItems="center" marginTop="2em" padding="1em 0 1em 0">
+          <Pagination count={data.totalPages} color="primary" onChange={handleChange}/>
+        </Stack>
+      )}
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </section>
   );
 }

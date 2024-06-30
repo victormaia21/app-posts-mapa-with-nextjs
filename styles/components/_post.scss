@@ -1,0 +1,30 @@
+.see-more {
+    color: blue;
+
+    &:hover {
+        border-bottom: 1px solid blue;
+        cursor: pointer;
+    }
+}
+
+.comments {
+    div {
+        margin-top: 1em;
+        border-top: 2px solid black;
+        padding: 1em 0;
+
+        a {
+            color: black;
+            p {
+                &:first-child {
+                    margin-bottom: .5em;
+    
+                    &:hover {
+                        cursor: pointer;
+                        color: blue;
+                    }
+                }
+            }
+        }
+    }
+}

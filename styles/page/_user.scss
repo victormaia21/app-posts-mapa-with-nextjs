@@ -1,0 +1,45 @@
+.card {
+    width: 80%;
+    margin: 2em auto;
+
+    .information-profile, 
+    .information-profile-company, 
+    .information-profile-address {
+        margin-top: 2em;
+        border-bottom: 1px solid #888;
+        padding: 1em 0;
+    }
+
+    .navigation-profile {
+        margin-top: 1em;
+    }
+
+    .information-profile {
+        p {
+            margin-top: .5em;
+        }
+    }
+
+    .information-profile-company {
+        div {
+            margin-top: 1em;
+            margin-left: 1em;
+
+            p {
+                margin-top: .5em;
+            }
+        }
+    }
+
+    .information-profile-address {
+        div {
+            margin-top: 1em;
+            margin-left: 1em;
+
+            p {
+                margin-top: .5em;
+            }
+        }
+    }
+}
+
