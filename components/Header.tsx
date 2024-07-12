@@ -5,7 +5,6 @@ export default function Header() {
         <header className="header">
             <ul>
                 <li><Link href="/">Posts</Link></li>
-                <li><Link href="/users">Users</Link></li>
             </ul>
         </header>
     )
