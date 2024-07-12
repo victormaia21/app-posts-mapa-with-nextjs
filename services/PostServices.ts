@@ -1,20 +1,28 @@
 import Api from "@/util/Api";
-import { Posts, Users } from "@/util/Interfaces";
+import { Posts } from "@/util/Interfaces";
 
 export default function PostsServices() {
-    const getPosts = async (pg: number, perPg: number): Promise<{ posts: Posts[], totalItems: number, totalPages: number }> => {
+    const getPosts = async (pg: number, perPg: number, search: string): Promise<{ posts: Posts[], totalPages: number }> => {
         const last = perPg * pg;
         const first = last - perPg;
-
+    
         const response = await Api.get("/posts");
-        const data = response.data as Posts[];
+        let data: Posts[] = response.data;
+    
+        if (search) {
+            const lowerCaseSearch = search.toLowerCase();
+            data = data.filter(post => 
+                post.title.toLowerCase().includes(lowerCaseSearch) || 
+                post.body.toLowerCase().includes(lowerCaseSearch)
+            );
+        }
+    
         const totalItems = data.length;
         const totalPages = Math.ceil(totalItems / perPg);
-
+    
         return {
             posts: data.slice(first, last),
-            totalItems,
-            totalPages
+            totalPages,
         };
     }
 

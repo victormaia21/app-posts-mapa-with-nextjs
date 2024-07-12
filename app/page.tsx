@@ -7,30 +7,16 @@ import PostServices from '@/services/PostServices';
 import { useState } from 'react';
 import { Grid, Button, Pagination, Stack } from '@mui/material';
 import Post from '@/components/Post';
-import { Posts } from '@/util/Interfaces';
-
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
-}
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
+import useStore from '@/util/useStore';
 
 export default function RecipeReviewCard() {
+  const { search } = useStore();
   const [pg, setPg] = useState<number>(1);
   const [perPg, setPerPg] = useState<number>(20);
 
   const { getPosts } = PostServices();
 
-  const { data, isLoading, isError } = useQuery(['posts', pg, perPg], () => getPosts(pg, perPg));
+  const { data } = useQuery(['posts', pg, perPg, search], () => getPosts(pg, perPg, search));
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPg(value);
