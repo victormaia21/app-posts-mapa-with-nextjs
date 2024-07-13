@@ -26,7 +26,6 @@ export default function Post({ title, body, userId, id }: Props) {
 
   const { data: user } = useQuery(['user', userId], () => getUserById(userId));
   const { data: comments } = useQuery(['posts', userId], () => getCommentsByPost(id));
-  console.log(comments)
 
   const [bodyOpen, setBodyOpen] = useState<boolean>(false);
   const [like, setLike] = useState<boolean>(false);
@@ -41,13 +40,11 @@ export default function Post({ title, body, userId, id }: Props) {
       const favToArray = JSON.parse(favStorage) as PostFavorite[];
       const idExist = favToArray.some((e) => e.id === id);
       if (idExist) {
-        // Remove from favorites
         const updatedFavorites = favToArray.filter((e) => e.id !== id);
         localStorage.setItem('favs', JSON.stringify(updatedFavorites));
         setFavorites(updatedFavorites);
         setLike(false);
       } else {
-        // Add to favorites
         favToArray.push({ id });
         localStorage.setItem('favs', JSON.stringify(favToArray));
         setFavorites(favToArray);
@@ -71,7 +68,7 @@ export default function Post({ title, body, userId, id }: Props) {
   }, [favorites, id]);
 
   return (
-    <Grid item xs={4} marginTop=".5em" >
+    <Grid item xs={6} sm={4} marginTop=".5em" >
       <Card sx={{ height: "22em", overflow: "auto", justifyContent:"center" }}>
         <CardHeader
           avatar={

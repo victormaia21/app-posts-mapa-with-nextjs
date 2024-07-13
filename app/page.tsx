@@ -12,12 +12,13 @@ import useStore from '@/util/useStore';
 export default function RecipeReviewCard() {
   const { search } = useStore();
   const [pg, setPg] = useState<number>(1);
-  const [perPg, setPerPg] = useState<number>(20);
+  const [perPg] = useState<number>(20);
 
   const { getPosts } = PostServices();
 
   const { data } = useQuery(['posts', pg, perPg, search], () => getPosts(pg, perPg, search));
 
+  console.log(pg)
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPg(value);
   };
